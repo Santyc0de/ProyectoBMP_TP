@@ -10,17 +10,6 @@ imagen_bmp_t* aplicar_escala_grises(const imagen_bmp_t* orig);
 imagen_bmp_t* aplicar_tonalidad(const imagen_bmp_t* orig, char canal, int porcentaje);
 imagen_bmp_t* aplicar_contraste(const imagen_bmp_t* orig, int porcentaje, int aumentar);
 
-// Geometría y Dimensiones
-imagen_bmp_t* aplicar_espejar_horizontal(const imagen_bmp_t* orig);
-imagen_bmp_t* aplicar_espejar_vertical(const imagen_bmp_t* orig);
-imagen_bmp_t* aplicar_rotar(const imagen_bmp_t* orig, int sentido_horario);
-imagen_bmp_t* aplicar_recortar(const imagen_bmp_t* orig, int porcentaje);
-imagen_bmp_t* aplicar_achicar(const imagen_bmp_t* orig, int porcentaje);
 
-// Composición
-imagen_bmp_t* aplicar_concatenar(const imagen_bmp_t* img1, const imagen_bmp_t* img2, int vertical, pixel_t color_relleno);
-
-// Filtro Comodín (Sepia)
-imagen_bmp_t* aplicar_comodin(const imagen_bmp_t* orig);
 
 #endif // FILTROS_H_INCLUDED
