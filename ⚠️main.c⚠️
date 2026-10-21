@@ -1,0 +1,10 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "segurofunciones.h"
+
+int main(int argc, char* argv[])
+ {
+    return solucion(argc, argv);
+
+
+ }
