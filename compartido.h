@@ -51,7 +51,7 @@ imagen_bmp_t* cargar_bmp(const char* ruta);
 int guardar_bmp(const char* ruta, const imagen_bmp_t* img);
 void liberar_imagen(imagen_bmp_t* img);
 
-
+imagen_bmp_t* clonar_estructura(const imagen_bmp_t* orig, int nuevo_alto, int nuevo_ancho);
 
 
 #endif // COMPARTIDO_H_INCLUDED

@@ -1,5 +1,5 @@
 #include "compartido.h"
-#include "segurofunciones.h"
+//#include "segurofunciones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -167,16 +167,33 @@ int guardar_bmp(const char* ruta, const imagen_bmp_t* img) {
     return 1;
 }
 
+imagen_bmp_t* clonar_estructura(const imagen_bmp_t* orig, int nuevo_alto, int nuevo_ancho) {
+    imagen_bmp_t* nueva = (imagen_bmp_t*)malloc(sizeof(imagen_bmp_t));
+    if (!nueva) return NULL;
 
+    nueva->header = orig->header;
+    nueva->info = orig->info;
 
+    // Actualizamos las dimensiones y el tamaño de la cabecera e imagen
+    nueva->info.ancho = nuevo_ancho;
+    nueva->info.alto = nuevo_alto;
 
+    int padding = (4 - (nuevo_ancho * 3) % 4) % 4;
+    unsigned int tamFilaConPadding = (nuevo_ancho * 3) + padding;
+    unsigned int tamImagen = tamFilaConPadding * nuevo_alto;
 
+    nueva->info.tam_imagen = tamImagen;
+    nueva->header.offset_datos = sizeof(cabecera_archivo_t) + sizeof(cabecera_info_t);
+    nueva->header.tam_archivo = nueva->header.offset_datos + tamImagen;
 
+    nueva->pixeles = crear_matriz(nuevo_alto, nuevo_ancho);
+    if (!nueva->pixeles) {
+        free(nueva);
+        return NULL;
+    }
 
-
-
-
-
+    return nueva;
+}
 
 static void extraer_nombre_base(const char* ruta, char* buffer)
 {
