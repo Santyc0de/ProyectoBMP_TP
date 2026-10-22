@@ -31,19 +31,27 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="Funciones_Aybar.h" />
+		<Unit filename="Funciones_Tevez.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Funciones_Tevez.h" />
+		<Unit filename="Funciones_aybar.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="ProcesarArgumentos.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="ProcesarArgumentos.h" />
-		<Unit filename="bmp_utils.c">
+		<Unit filename="_compartido.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="bmp_utils.h" />
 		<Unit filename="estructuras.h" />
-		<Unit filename="filtros.c">
+		<Unit filename="funciones_aleman.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="filtros.h" />
+		<Unit filename="funciones_aleman.h" />
 		<Unit filename="funciones_grupo.c">
 			<Option compilerVar="CC" />
 		</Unit>

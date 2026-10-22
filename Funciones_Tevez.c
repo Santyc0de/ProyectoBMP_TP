@@ -47,26 +47,6 @@ imagen_bmp_t* aplicar_escala_grises(const imagen_bmp_t* orig) {
     return aplicar_filtro_pixel_a_pixel(orig, pixel_escala_grises);
 }
 
-imagen_bmp_t* aplicar_tonalidad(const imagen_bmp_t* orig, char canal, int porcentaje) {
-    int alto = abs(orig->info.alto);
-    int ancho = orig->info.ancho;
-
-    imagen_bmp_t* res = clonar_estructura(orig, alto, ancho);
-    if (!res) return NULL;
-
-    float factor = 1.0f + (porcentaje / 100.0f);
-
-    for (int i = 0; i < alto; i++) {
-        for (int j = 0; j < ancho; j++) {
-            res->pixeles[i][j] = orig->pixeles[i][j];
-            if (canal == 'b' || canal == 'B') res->pixeles[i][j].azul = clampa((int)(orig->pixeles[i][j].azul * factor));
-            if (canal == 'g' || canal == 'G') res->pixeles[i][j].verde = clampa((int)(orig->pixeles[i][j].verde * factor));
-            if (canal == 'r' || canal == 'R') res->pixeles[i][j].rojo = clampa((int)(orig->pixeles[i][j].rojo * factor));
-        }
-    }
-    return res;
-}
-
 imagen_bmp_t* aplicar_contraste(const imagen_bmp_t* orig, int porcentaje, int aumentar) {
     int alto = abs(orig->info.alto);
     int ancho = orig->info.ancho;
