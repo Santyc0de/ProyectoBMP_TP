@@ -3,11 +3,7 @@
 #include <math.h>
 #include "Funciones_Tevez.h"
 
-unsigned char clampa(int valor) {
-    if (valor < 0) return 0;
-    if (valor > 255) return 255;
-    return (unsigned char)valor;
-}
+
 
 
 imagen_bmp_t* aplicar_filtro_pixel_a_pixel(const imagen_bmp_t* orig, t_transformador_pixel transformador) {
