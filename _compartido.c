@@ -174,7 +174,7 @@ imagen_bmp_t* clonar_estructura(const imagen_bmp_t* orig, int nuevo_alto, int nu
     nueva->header = orig->header;
     nueva->info = orig->info;
 
-    // Actualizamos las dimensiones y el tamaño de la cabecera e imagen
+    // Actualizamos las dimensiones y el tamaÃ±o de la cabecera e imagen
     nueva->info.ancho = nuevo_ancho;
     nueva->info.alto = nuevo_alto;
 
@@ -216,4 +216,10 @@ static int filtro_ya_procesado(char** procesados, int cant, const char* filtro)
         if (strcmp(procesados[i], filtro) == 0) return 1;
     }
     return 0;
+}
+
+unsigned char clampa(int valor) {
+    if (valor < 0) return 0;
+    if (valor > 255) return 255;
+    return (unsigned char)valor;
 }
