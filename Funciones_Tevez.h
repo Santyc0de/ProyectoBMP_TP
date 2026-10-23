@@ -7,7 +7,7 @@
 typedef void (*t_transformador_pixel)(const pixel_t* src, pixel_t* dest);
 typedef void (*t_mapeador_coordenadas)(int i, int j, int alto, int ancho, int* src_i, int* src_j);
 
-unsigned char clampa(int valor);
+
 imagen_bmp_t* aplicar_filtro_pixel_a_pixel(const imagen_bmp_t* orig, t_transformador_pixel transformador);
 
 void pixel_negativo(const pixel_t* src, pixel_t* dest);
