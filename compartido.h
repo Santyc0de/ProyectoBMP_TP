@@ -54,5 +54,8 @@ unsigned char clampa(int valor);
 
 imagen_bmp_t* clonar_estructura(const imagen_bmp_t* orig, int nuevo_alto, int nuevo_ancho);
 
+void extraer_nombre_base(const char* ruta, char* buffer);
+int filtro_ya_procesado(char** procesados, int cant, const char* filtro);
+
 
 #endif // COMPARTIDO_H_INCLUDED

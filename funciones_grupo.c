@@ -4,27 +4,11 @@
 #include "compartido.h"
 #include "Funciones_Aybar.h"
 #include "Funciones_Tevez.h"
-//#include "segurofunciones.h"
+#include "funciones_aleman.h"
+
 #define NOMBRE_GRUPO "VARIABLE"
 
-
-
-static int filtro_ya_procesado(char** procesados, int cant, const char* filtro);
 static int procesar_comandos_flexibles(int argc, char* argv[], int idx_imagen, imagen_bmp_t* img1, const char* nombre_base);
-
-
-static void extraer_nombre_base(const char* ruta, char* buffer)
-{
-    const char* barra = strrchr(ruta, '\\');
-    if (!barra) {
-        barra = strrchr(ruta, '/');
-    }
-    const char* nombre = barra ? barra + 1 : ruta;
-    strcpy(buffer, nombre);
-
-    char* punto = strrchr(buffer, '.');
-    if (punto) *punto = '\0';
-}
 
 int solucion(int argc, char* argv[])
 {
@@ -65,8 +49,7 @@ int solucion(int argc, char* argv[])
     return 0;
 }
 
-int procesar_comandos_flexibles(int argc, char* argv[], int idx_imagen, imagen_bmp_t* img1, const char* nombre_base)
-{
+static int procesar_comandos_flexibles(int argc, char* argv[], int idx_imagen, imagen_bmp_t* img1, const char* nombre_base) {
     char* filtros_ejecutados[64];
     int cant_filtros = 0;
 
@@ -91,7 +74,7 @@ int procesar_comandos_flexibles(int argc, char* argv[], int idx_imagen, imagen_b
         imagen_bmp_t* img_res = NULL;
         char tag_filtro[128] = "";
 
-        // 1. FILTROS SIN PARÁMETROS
+        // --- FILTROS SIN PARÁMETROS ---
         if (strcmp(arg, "--negativo") == 0) {
             img_res = aplicar_negativo(img1);
             strcpy(tag_filtro, "negativo");
@@ -120,68 +103,58 @@ int procesar_comandos_flexibles(int argc, char* argv[], int idx_imagen, imagen_b
             img_res = aplicar_comodin(img1);
             strcpy(tag_filtro, "comodin");
         }
-
-        // 2. FILTROS DE CONCATENACIÓN
-        else if (strcmp(arg, "--concatenar-horizontal") == 0 || strcmp(arg, "--concatenar-vertical") == 0) {
-            if (i + 1 < argc && strncmp(argv[i + 1], "--", 2) != 0) {
-                const char* ruta_img2 = argv[++i];
-                imagen_bmp_t* img2 = cargar_bmp(ruta_img2);
-                if (img2) {
-                    int vertical = (strcmp(arg, "--concatenar-vertical") == 0);
-                    pixel_t azul_relleno = {255, 0, 0};
-                    img_res = aplicar_concatenar(img1, img2, vertical, azul_relleno);
-                    strcpy(tag_filtro, vertical ? "concatenar-vertical" : "concatenar-horizontal");
-                    liberar_imagen(img2);
-                } else {
-                    printf("Error: No se pudo cargar la segunda imagen '%s'.\n", ruta_img2);
-                }
-            } else {
-                printf("Error: Falta el argumento de la segunda imagen para concatenar.\n");
-            }
-        }
-
-        // 3. FILTROS CON PARÁMETROS NUMÉRICOS (--comando=VAL) Y DESCONOCIDOS
+        // --- FILTROS CON PARÁMETROS NUMÉRICOS ---
         else {
-            char* igual = strchr(arg, '=');
-            if (igual != NULL) {
-                int len_cmd = (int)(igual - arg);
-                char comando[64];
+            char nombre_filtro[64];
+            int val;
+            if (sscanf(arg, "--tonalidad-%62[^--]=%d", nombre_filtro, &val) == 2 ||
+                sscanf(arg, "--%62[^--]=%d", nombre_filtro, &val) == 2) {
 
-                if (len_cmd < (int)sizeof(comando)) {
-                    strncpy(comando, arg, len_cmd);
-                    comando[len_cmd] = '\0';
-                    int val = atoi(igual + 1);
-
-                    if (val >= 0 && val <= 100) {
-                        if (strcmp(comando, "--tonalidad-azul") == 0) {
-                            img_res = aplicar_tonalidad(img1, 'b', val);
-                            strcpy(tag_filtro, "tonalidad-azul");
-                        } else if (strcmp(comando, "--tonalidad-verde") == 0) {
-                            img_res = aplicar_tonalidad(img1, 'g', val);
-                            strcpy(tag_filtro, "tonalidad-verde");
-                        } else if (strcmp(comando, "--tonalidad-roja") == 0) {
-                            img_res = aplicar_tonalidad(img1, 'r', val);
-                            strcpy(tag_filtro, "tonalidad-roja");
-                        } else if (strcmp(comando, "--aumentar-contraste") == 0) {
-                            img_res = aplicar_contraste(img1, val, 1);
-                            strcpy(tag_filtro, "aumentar-contraste");
-                        } else if (strcmp(comando, "--reducir-contraste") == 0) {
-                            img_res = aplicar_contraste(img1, val, 0);
-                            strcpy(tag_filtro, "reducir-contraste");
-                        } else if (strcmp(comando, "--recortar") == 0 && val > 0) {
-                            img_res = aplicar_recortar(img1, val);
-                            strcpy(tag_filtro, "recortar");
-                        } else if (strcmp(comando, "--achicar") == 0 && val > 0) {
-                            img_res = aplicar_achicar(img1, val);
-                            strcpy(tag_filtro, "achicar");
-                        } else {
-                            printf("Aviso: Comando con parametro desconocido '%s'. Se ignora.\n", arg);
-                        }
+                if (val >= 0 && val <= 100) {
+                    if (strcmp(nombre_filtro, "tonalidad-azul") == 0) {
+                        img_res = aplicar_tonalidad(img1, 'b', val);
+                        strcpy(tag_filtro, "tonalidad-azul");
+                    } else if (strcmp(nombre_filtro, "tonalidad-verde") == 0) {
+                        img_res = aplicar_tonalidad(img1, 'g', val);
+                        strcpy(tag_filtro, "tonalidad-verde");
+                    } else if (strcmp(nombre_filtro, "tonalidad-roja") == 0) {
+                        img_res = aplicar_tonalidad(img1, 'r', val);
+                        strcpy(tag_filtro, "tonalidad-roja");
+                    } else if (strcmp(nombre_filtro, "aumentar-contraste") == 0) {
+                        img_res = aplicar_contraste(img1, val, 1);
+                        strcpy(tag_filtro, "aumentar-contraste");
+                    } else if (strcmp(nombre_filtro, "reducir-contraste") == 0) {
+                        img_res = aplicar_contraste(img1, val, 0);
+                        strcpy(tag_filtro, "reducir-contraste");
+                    } else if (strcmp(nombre_filtro, "recortar") == 0 && val > 0) {
+                        img_res = aplicar_recortar(img1, val);
+                        strcpy(tag_filtro, "recortar");
+                    } else if (strcmp(nombre_filtro, "achicar") == 0 && val > 0) {
+                        img_res = aplicar_achicar(img1, val);
+                        strcpy(tag_filtro, "achicar");
                     } else {
-                        printf("Error: Porcentaje fuera de rango (0-100) en '%s'.\n", arg);
+                        printf("Aviso: Comando con parametro desconocido '%s'. Se ignora.\n", arg);
                     }
+                } else {
+                    printf("Error: Porcentaje fuera de rango (0-100) en %s\n", arg);
                 }
-            } else {
+            }
+            // --- FILTROS DE CONCATENACIÓN ---
+            else if (strcmp(arg, "--concatenar-horizontal") == 0 || strcmp(arg, "--concatenar-vertical") == 0) {
+                if (i + 1 < argc && strncmp(argv[i + 1], "--", 2) != 0) {
+                    const char* ruta_img2 = argv[++i];
+                    imagen_bmp_t* img2 = cargar_bmp(ruta_img2);
+                    if (img2) {
+                        int vertical = (strcmp(arg, "--concatenar-vertical") == 0);
+                        pixel_t azul_relleno = {255, 0, 0};
+                        img_res = aplicar_concatenar(img1, img2, vertical, azul_relleno);
+                        strcpy(tag_filtro, vertical ? "concatenar-vertical" : "concatenar-horizontal");
+                        liberar_imagen(img2);
+                    } else printf("Error: No se pudo cargar la segunda imagen '%s'\n", ruta_img2);
+                } else printf("Error: Falta el argumento de la segunda imagen para concatenar.\n");
+            }
+            else {
+                // Cualquier argumento no reconocido se notifica y se ignora sin detener el programa
                 printf("Aviso: Comando desconocido '%s'. Se ignora.\n", arg);
             }
         }
@@ -205,16 +178,6 @@ int procesar_comandos_flexibles(int argc, char* argv[], int idx_imagen, imagen_b
 
     for (int i = 0; i < cant_filtros; i++) {
         free(filtros_ejecutados[i]);
-    }
-    return 0;
-}
-
-
-
-static int filtro_ya_procesado(char** procesados, int cant, const char* filtro)
-{
-    for (int i = 0; i < cant; i++) {
-        if (strcmp(procesados[i], filtro) == 0) return 1;
     }
     return 0;
 }

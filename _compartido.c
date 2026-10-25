@@ -1,5 +1,4 @@
 #include "compartido.h"
-//#include "segurofunciones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -195,7 +194,7 @@ imagen_bmp_t* clonar_estructura(const imagen_bmp_t* orig, int nuevo_alto, int nu
     return nueva;
 }
 
-static void extraer_nombre_base(const char* ruta, char* buffer)
+void extraer_nombre_base(const char* ruta, char* buffer)
 {
     const char* barra = strrchr(ruta, '\\');
     if (!barra) {
@@ -210,7 +209,7 @@ static void extraer_nombre_base(const char* ruta, char* buffer)
 
 
 
-static int filtro_ya_procesado(char** procesados, int cant, const char* filtro)
+int filtro_ya_procesado(char** procesados, int cant, const char* filtro)
 {
     for (int i = 0; i < cant; i++) {
         if (strcmp(procesados[i], filtro) == 0) return 1;
@@ -223,3 +222,4 @@ unsigned char clampa(int valor) {
     if (valor > 255) return 255;
     return (unsigned char)valor;
 }
+

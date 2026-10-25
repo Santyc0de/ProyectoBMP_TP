@@ -39,14 +39,11 @@
 		<Unit filename="Funciones_aybar.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="ProcesarArgumentos.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="ProcesarArgumentos.h" />
 		<Unit filename="_compartido.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="bmp_utils.h" />
+		<Unit filename="compartido.h" />
 		<Unit filename="estructuras.h" />
 		<Unit filename="funciones_aleman.c">
 			<Option compilerVar="CC" />
